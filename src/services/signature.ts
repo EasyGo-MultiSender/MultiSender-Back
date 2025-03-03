@@ -38,10 +38,7 @@ export const apiService = {
   async saveTransactionsToCSV(data: SignatureRequest): Promise<void> {
     try {
       // 保存先ディレクトリを確認・作成
-      const csvDir = path.join(process.cwd(), 'public', 'csv');
-      if (!fs.existsSync(csvDir)) {
-        fs.mkdirSync(csvDir, { recursive: true });
-      }
+      const csvDir = await this.getOrMakedirectoryPass(data.sender_wallet);
 
       // ファイル名をウォレットアドレスに基づいて作成（日時を追加して重複防止）
       const fileName = `${data.sender_wallet}_${Date.now()}.csv`;
@@ -58,6 +55,24 @@ export const apiService = {
       // CSVファイルに書き込み
       await fs.promises.writeFile(filePath, csvHeader + csvRows, 'utf8');
       
+    } catch (error) {
+      console.error('Error saving CSV file:', error);
+      throw new Error(`Failed to save CSV file: ${error.message}`);
+    }
+  },
+
+  async getOrMakedirectoryPass(walletAddress: string): Promise<string> {
+    try {
+      // 保存先ディレクトリを確認・作成
+      const firstChar = walletAddress.charAt(0);
+      const csvDir = path.join(process.cwd(), 'public', 'csv', firstChar, walletAddress);
+
+      // ない場合は再帰的にディレクトリを生成
+      if (!fs.existsSync(csvDir)) {
+        fs.mkdirSync(csvDir, { recursive: true });
+      }
+
+      return csvDir;
     } catch (error) {
       console.error('Error saving CSV file:', error);
       throw new Error(`Failed to save CSV file: ${error.message}`);
