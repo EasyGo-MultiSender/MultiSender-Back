@@ -9,7 +9,7 @@ router.post('/signature', async (req, res) => {
     const response = await apiService.postSignature(req.body);
     res.status(204).end();
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 });
 
