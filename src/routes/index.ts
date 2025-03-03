@@ -7,7 +7,7 @@ const router = express.Router();
 router.post('/signature', async (req, res) => {
   try {
     const response = await apiService.postSignature(req.body);
-    res.json(response);
+    res.status(204).end();
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

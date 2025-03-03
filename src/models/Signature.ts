@@ -10,11 +10,3 @@ export interface SignatureRequest {
   token_mint_address: string;
   transactions: Transaction[];
 }
-
-export interface SignatureResponse {
-  transaction_id: string;
-  processed_at: string;
-  success: boolean;
-  transactions_count: number;
-  total_amount: number;
-}
