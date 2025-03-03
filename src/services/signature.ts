@@ -31,17 +31,14 @@ export const apiService = {
     }
   },
 
-  /**
-   * トランザクションデータをCSVとして保存
-   * @param data 署名と送信データ
-   */
+
   async saveTransactionsToCSV(data: SignatureRequest): Promise<void> {
     try {
       // 保存先ディレクトリを確認・作成
       const csvDir = await this.getOrMakedirectoryPass(data.sender_wallet);
 
       // ファイル名をウォレットアドレスに基づいて作成（日時を追加して重複防止）
-      const fileName = `${data.sender_wallet}_${Date.now()}.csv`;
+      const fileName = `${data.signature}.csv`;
       const filePath = path.join(csvDir, fileName);
 
       // CSVヘッダー
