@@ -1,52 +1,56 @@
-## About
+# bulksender-backend
 
-This project was created with [express-generator-typescript](https://github.com/seanpmaxwell/express-generator-typescript).
+## ディレクトリ構成
 
+### src/common
 
-## Available Scripts
+パスの設定やステータスコードの設定が諸々書いてある。さわっていない
 
-### `npm run clean-install`
+### src/model
 
-Remove the existing `node_modules/` folder, `package-lock.json`, and reinstall all library modules.
+型の定義が書いてある。
 
+### src/service
 
-### `npm run dev` or `npm run dev:hot` (hot reloading)
+apiの処理の部分を書いてある。csv保存などのロジックはここ
 
-Run the server in development mode.<br/>
+### src/routes
 
-**IMPORTANT** development mode uses `swc` for performance reasons which DOES NOT check for typescript errors. Run `npm run type-check` to check for type errors. NOTE: you should use your IDE to prevent most type errors.
+エンドポイントの設定を書いてある。今回は一つしかない。
 
+## 使用方法
 
-### `npm test` or `npm run test:hot` (hot reloading)
+まず、`npm install`を実行して依存関係をインストールしてください。
 
-Run all unit-tests.
+その後、`npm run dev`を実行してサーバーを起動してください。
 
+## API
 
-### `npm test -- "name of test file" (i.e. users).`
+現在は`http://localhost:3000/api/signature`にPOSTリクエストを送ることで、csvのpostリクエストを送ることが出来ます
 
-Run a single unit-test.
+### POST /api/signature
 
+現状は以下のようですが、変更する可能性がかなりあります。
 
-### `npm run lint`
+#### Request
 
-Check for linting errors.
+```json
+{
+  "signature": "example_signature",
+  "sender_wallet": "abasoifha",
+  "token_mint_address": "example_token_mint_address",
+  "timeStamp" : "number";
+  "transactions": [
+    {
+      "recipient_wallet": "recipient_wallet_1",
+      "amount": 100
+    },
+    {
+      "recipient_wallet": "recipient_wallet_2",
+      "amount": 200
+    }
+    ...
+  ]
+}
+```
 
-
-### `npm run build`
-
-Build the project for production.
-
-
-### `npm start`
-
-Run the production build (Must be built first).
-
-
-### `npm run type-check`
-
-Check for typescript errors.
-
-
-## Additional Notes
-
-- If `npm run dev` gives you issues with bcrypt on MacOS you may need to run: `npm rebuild bcrypt --build-from-source`. 
