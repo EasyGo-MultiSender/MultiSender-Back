@@ -1,33 +1,16 @@
-import { Router } from 'express';
+import express from 'express';
+import { apiService } from '../services/signature';
 
-import Paths from '../common/Paths';
-import UserRoutes from './UserRoutes';
+const router = express.Router();
 
+// APIエンドポイントを定義
+router.post('/signature', async (req, res) => {
+  try {
+    const response = await apiService.postSignature(req.body);
+    res.json(response);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 
-/******************************************************************************
-                                Variables
-******************************************************************************/
-
-const apiRouter = Router();
-
-
-// ** Add UserRouter ** //
-
-// Init router
-const userRouter = Router();
-
-// Get all users
-userRouter.get(Paths.Users.Get, UserRoutes.getAll);
-userRouter.post(Paths.Users.Add, UserRoutes.add);
-userRouter.put(Paths.Users.Update, UserRoutes.update);
-userRouter.delete(Paths.Users.Delete, UserRoutes.delete);
-
-// Add UserRouter
-apiRouter.use(Paths.Users.Base, userRouter);
-
-
-/******************************************************************************
-                                Export default
-******************************************************************************/
-
-export default apiRouter;
+export default router;
