@@ -28,7 +28,7 @@ export const apiService = {
   async saveTransactionsToCSV(data: SignatureRequest): Promise<void> {
     try {
       // 保存先ディレクトリを確認・作成
-      const csvDir = await this.getOrMakedirectoryPass(data.sender_wallet);
+      const csvDir = await this.getOrMakedirectoryPass(data.senderWallet);
 
       // ファイル名をウォレットアドレスに基づいて作成（日時を追加して重複防止）
       const fileName = `${data.signature}.csv`;
@@ -39,7 +39,7 @@ export const apiService = {
       
       // CSVデータ行を作成
       const csvRows = data.transactions.map(tx => 
-        `${tx.recipient_wallet},${tx.amount},${data.token_mint_address},${data.signature}`
+        `${tx.recipient_wallet},${tx.amount},${data.tokenMintAddress},${data.signature}`
       ).join('\n');
 
       // CSVファイルに書き込み

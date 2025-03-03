@@ -6,7 +6,8 @@ export interface Transaction {
 
 export interface SignatureRequest {
   signature: string;
-  sender_wallet: string;
-  token_mint_address: string;
+  senderWallet: string;
+  timeStamp : string;
+  tokenMintAddress: string;
   transactions: Transaction[];
 }
