@@ -9,24 +9,23 @@ export const apiService = {
    * @param data 署名と送信データ
    * @returns 処理結果
    */
-  async postSignature(data: SignatureRequest): Promise<void> {
+  async uploadCsv(data: SignatureRequest): Promise<void> {
     try {
-      
       // 保存先ディレクトリを確認・なければ作成
-      const csvDir = await this.getOrMakedirectoryPass(data.senderWallet);
+      const filePath = await this.getOrMakeFilePass(data.senderWallet, data.timeStamp, data.uuid);
 
       // ファイル名をウォレットアドレスに基づいて作成（日時を追加して重複防止）
       const fileName = `${data.timeStamp}.csv`; // ファイル名はタイムスタンプ
-      const filePath = path.join(csvDir, fileName);
 
       // CSVヘッダー
       const csvHeader =
-        "signature,status,error,error_message,sender_wallet,token_type,token_symbol,time_stamp,uuid,recipient_wallet,amount\n";
+        "uuid,signature,status,error,error_message,sender_wallet,token_type,token_symbol,time_stamp,recipient_wallet,amount\n";
 
       // CSVデータ行を作成
       const csvRows = data.transactions
         .map(({ recipient_wallet, amount }) =>
           [
+            data.uuid,
             data.signature,
             data.status,
             data.error,
@@ -35,7 +34,6 @@ export const apiService = {
             data.tokenType,
             data.tokenSymbol,
             data.timeStamp,
-            data.uuid,
             recipient_wallet,
             amount,
           ].join(",")
@@ -52,7 +50,7 @@ export const apiService = {
     }
   },
 
-  async getOrMakedirectoryPass(walletAddress: string): Promise<string> {
+  async getOrMakeFilePass(walletAddress: string, timeStamp: string, uuid: string): Promise<string> {
     try {
       // 保存先ディレクトリを確認・作成
       const firstChar = walletAddress.charAt(0);
@@ -63,7 +61,41 @@ export const apiService = {
         fs.mkdirSync(csvDir, { recursive: true });
       }
 
-      return csvDir;
+      const files = await fs.promises.readdir(csvDir);
+
+      const targetTime = new Date(timeStamp).getTime();
+      const oneMinute = 60 * 1000; // 誤差一分のファイルを全て取得する
+
+      const matchingFiles = files.filter((file) => {
+        const fileTime = new Date(file.replace(".csv", "")).getTime();
+        return Math.abs(fileTime - targetTime) <= oneMinute;
+      });
+
+      // ファイルの中身を確認してuuidが一致するかどうかをチェック
+      for (const file of matchingFiles) {
+        const filePath = path.join(csvDir, file);
+        const fileContent = await fs.promises.readFile(filePath, "utf8");
+        const lines = fileContent.split("\n");
+
+        // CSVのヘッダーをスキップして2行目を解析
+        if (lines.length > 1) {
+          const line = lines[1];
+          if (line.trim() !== "") {
+            const columns = line.split(",");
+            const fileUuid = columns[0]; // uuidは1番目のカラムにあると仮定
+
+            if (fileUuid === uuid) {
+              return filePath;
+            }
+          }
+        }
+      }
+
+      // 一致するファイルがない場合は新規作成
+      const newFilePath = path.join(csvDir, `${timeStamp}.csv`);
+      await fs.promises.writeFile(newFilePath, "", "utf8"); // 空のファイルを作成
+
+      return newFilePath;
     } catch (error) {
       console.error("Error saving CSV file:", error);
       throw new Error(`Failed to save CSV file: ${error.message}`);
