@@ -1,5 +1,5 @@
 export interface Transaction {
-  recipient_wallet: string;
+  recipientWallet: string;
   amount: number;
 }
 
