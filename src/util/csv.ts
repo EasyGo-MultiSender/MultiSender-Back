@@ -17,10 +17,6 @@ export const apiService = {
       // ファイル名をウォレットアドレスに基づいて作成（日時を追加して重複防止）
       const fileName = `${data.timeStamp}.csv`; // ファイル名はタイムスタンプ
 
-      // CSVヘッダー
-      const csvHeader =
-        "uuid,signature,status,error,error_message,sender_wallet,token_type,token_symbol,time_stamp,recipient_wallet,amount\n";
-
       // CSVデータ行を作成
       const csvRows = data.transactions
         .map(({ recipient_wallet, amount }) =>
@@ -41,7 +37,7 @@ export const apiService = {
         .join("\n");
 
       // CSVファイルに書き込み
-      await fs.promises.writeFile(filePath, csvHeader + csvRows, "utf8");
+      await fs.promises.writeFile(filePath,  csvRows, "utf8");
 
       return;
     } catch (error) {
@@ -93,7 +89,9 @@ export const apiService = {
 
       // 一致するファイルがない場合は新規作成
       const newFilePath = path.join(csvDir, `${timeStamp}.csv`);
-      await fs.promises.writeFile(newFilePath, "", "utf8"); // 空のファイルを作成
+      const csvHeader =
+        "uuid,signature,status,error,error_message,sender_wallet,token_type,token_symbol,time_stamp,recipient_wallet,amount\n";
+      await fs.promises.writeFile(newFilePath, csvHeader, "utf8"); // ヘッダーを書き込んで空のファイルを作成
 
       return newFilePath;
     } catch (error) {
