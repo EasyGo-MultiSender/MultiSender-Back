@@ -12,7 +12,7 @@
 
 ### src/service
 
-apiの処理の部分を書く
+api の処理の部分を書く
 
 ### src/routes
 
@@ -20,11 +20,11 @@ apiの処理の部分を書く
 
 ### src/util
 
-csvの保存処理を書いている。
+csv の保存処理を書いている。
 
 ### public
 
-現状はcsvが保存してある。
+現状は csv が保存してある。
 
 ## 使用方法
 
@@ -34,7 +34,7 @@ csvの保存処理を書いている。
 
 ## API
 
-現在は`http://localhost:3000/api/signature`にPOSTリクエストを送ることで、csvのpostリクエストを送ることが出来ます
+現在は`http://localhost:3000/api/signature`に POST リクエストを送ることで、csv の post リクエストを送ることが出来ます
 
 ### POST /api/signature
 
@@ -62,11 +62,11 @@ csvの保存処理を書いている。
         "amount": 2.654321
         },
         {
-            
+
         "recipientWallet": "8KEXsoZYVRgmmXg9qfFnC7dMKjJdZRcfP3ATztR4KR5P",
         "amount": 2.654321
         }
-     ...   
+     ...
     ]
     }
 ```
