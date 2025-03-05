@@ -91,7 +91,7 @@ export const apiService = {
       const uuidPrefix = uuid.substring(0, 4); // 前六文字をファイル名に付ける
 
       const timeStampStr = ToCsvFileTimeStamp(timeStamp)
-      const newFilePath = path.join(csvDir, `${timeStamp}_`, `${uuidPrefix}.csv`);
+      const newFilePath = path.join(csvDir, `${timeStamp}_${uuidPrefix}.csv`);
       const csvHeader =
         "uuid,signature,status,error,error_message,sender_wallet,token_type,token_symbol,time_stamp,recipient_wallet,amount\n";
       await fs.promises.writeFile(newFilePath, csvHeader, "utf8"); // ヘッダーを書き込んで空のファイルを作成
