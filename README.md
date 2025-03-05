@@ -12,7 +12,7 @@
 
 ### src/service
 
-apiの処理の部分を書いてある。
+apiの処理の部分を書く
 
 ### src/routes
 
