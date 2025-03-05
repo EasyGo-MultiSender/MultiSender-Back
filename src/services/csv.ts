@@ -13,13 +13,13 @@ export const apiService = {
     try {
       // 保存先ディレクトリを確認・なければ作成
       const filePath = await this.getOrMakeFilePass(data.senderWallet, data.timeStamp, data.uuid);
-
-      // ファイル名をウォレットアドレスに基づいて作成（日時を追加して重複防止）
-      const fileName = `${data.timeStamp}.csv`; // ファイル名はタイムスタンプ
+      if (!filePath) {
+        throw new Error("Failed to get or make file path");
+      }
 
       // CSVデータ行を作成
       const csvRows = data.transactions
-        .map(({ recipient_wallet, amount }) =>
+        .map(({ recipientWallet, amount }) =>
           [
             data.uuid,
             data.signature,
@@ -30,14 +30,14 @@ export const apiService = {
             data.tokenType,
             data.tokenSymbol,
             data.timeStamp,
-            recipient_wallet,
+            recipientWallet,
             amount,
           ].join(",")
         )
         .join("\n");
 
-      // CSVファイルに書き込み
-      await fs.promises.writeFile(filePath,  csvRows, "utf8");
+
+      await fs.promises.appendFile(filePath,  csvRows, "utf8");
 
       return;
     } catch (error) {
@@ -61,9 +61,10 @@ export const apiService = {
 
       const targetTime = new Date(timeStamp).getTime();
       const oneMinute = 60 * 1000; // 誤差一分のファイルを全て取得する
-
+      
       const matchingFiles = files.filter((file) => {
         const fileTime = new Date(file.replace(".csv", "")).getTime();
+        console.log(fileTime)
         return Math.abs(fileTime - targetTime) <= oneMinute;
       });
 
