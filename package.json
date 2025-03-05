@@ -16,7 +16,9 @@
     "node": ">=16.0.0"
   },
   "dependencies": {
+    "arg": "^5.0.2",
     "cookie-parser": "^1.4.7",
+    "date-fns": "^4.1.0",
     "dayjs": "^1.11.13",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
@@ -47,7 +49,7 @@
     "@types/jsonfile": "^6.1.4",
     "@types/module-alias": "^2.0.4",
     "@types/morgan": "^1.9.9",
-    "@types/node": "^22.13.8",
+    "@types/node": "^22.13.9",
     "@types/supertest": "^6.0.2",
     "@typescript-eslint/eslint-plugin": "^8.25.0",
     "@typescript-eslint/parser": "^8.25.0",
