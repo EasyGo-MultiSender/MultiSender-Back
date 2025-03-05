@@ -26,6 +26,7 @@ export const apiService = {
             data.senderWallet,
             data.tokenType,
             data.tokenSymbol,
+            data.tokenMintAddress,
             data.timeStamp,
             recipientWallet,
             amount,
@@ -93,7 +94,7 @@ export const apiService = {
       const timeStampStr = ToCsvFileTimeStamp(timeStamp)
       const newFilePath = path.join(csvDir, `${timeStamp}_${uuidPrefix}.csv`);
       const csvHeader =
-        "uuid,signature,status,error,error_message,sender_wallet,token_type,token_symbol,time_stamp,recipient_wallet,amount\n";
+        "uuid,signature,status,error,error_message,sender_wallet,token_type,token_symbol,token_mint_address,time_stamp,recipient_wallet,amount\n";
       await fs.promises.writeFile(newFilePath, csvHeader, "utf8"); // ヘッダーを書き込んで空のファイルを作成
 
       return newFilePath;

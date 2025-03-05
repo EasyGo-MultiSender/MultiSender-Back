@@ -4,6 +4,7 @@ export interface Transaction {
 }
 
 export interface SignatureRequest {
+  uuid: string; // どこまでが1transferかを識別するためのID
   signature: string | null;
   status: string;
   error: string | null;
@@ -13,6 +14,5 @@ export interface SignatureRequest {
   tokenSymbol: string;
   tokenMintAddress: string; // 固定値
   timeStamp: string; // utc
-  uuid: string; // どこまでが1transferかを識別するためのID
   transactions: Transaction[];
 }

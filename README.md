@@ -38,27 +38,35 @@ csvの保存処理を書いている。
 
 ### POST /api/signature
 
-現状は以下のようですが、変更する可能性がかなりあります。
-
 #### Request
 
 ```json
-{
-  "signature": "example_signature",
-  "sender_wallet": "abasoifha",
-  "token_mint_address": "example_token_mint_address",
-  "timeStamp" : "number";
-  "transactions": [
     {
-      "recipient_wallet": "recipient_wallet_1",
-      "amount": 100
-    },
-    {
-      "recipient_wallet": "recipient_wallet_2",
-      "amount": 200
+    "signature": "539uCFvqfCLK8mmoxphzpjiwaP3yQmX1yxot7rD3cvwAXWpZN78Zhc39m9GBrKmU8Hhe5Xtz8CVxpkS8NcKDmR3F",
+    "senderWallet": "3bJP1Thy43hxFhAMZfPKeu3CCanDWuD8EJkC6Q2yUj",
+    "status" :"succsess",
+    "error" : null,
+    "errorMessage" : "errorMessage",
+    "tokenType": "tokenType",
+    "tokenSymbol" : "symbol",
+    "tokenMintAddress": "So11111111111111111111111111111111111111111",
+    "timeStamp": "20141010T045040Z",  // この形式でお願いします
+    "uuid": "strng",
+    "transactions": [
+        {
+        "recipientWallet": "5VTTMMPbgi4SjbKyeXwUvTf7S5VBYCRcqq4eHzV5BmyR",
+        "amount": 2.999999
+        },
+        {
+        "recipientWallet": "8KEXsoZYVRgmmXg9qfFnC7dMKjJdZRcfP3ATztR4KR5P",
+        "amount": 2.654321
+        },
+        {
+            
+        "recipientWallet": "8KEXsoZYVRgmmXg9qfFnC7dMKjJdZRcfP3ATztR4KR5P",
+        "amount": 2.654321
+        }
+     ...   
+    ]
     }
-    ...
-  ]
-}
 ```
-
