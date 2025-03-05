@@ -1,5 +1,5 @@
 // src/services/signature.ts
-import { SignatureRequest, SignatureResponse } from '../models/Signature';
+import { SignatureRequest } from '../models/Signature';
 import fs from 'fs';
 import path from 'path';
 
@@ -9,7 +9,7 @@ export const apiService = {
    * @param data 署名と送信データ
    * @returns 処理結果
    */
-  async postSignature(data: SignatureRequest): Promise<SignatureResponse> {
+  async postSignature(data: SignatureRequest): Promise<void> {
     try {
       // トランザクションの合計金額を計算
       const totalAmount = data.transactions.reduce((sum, tx) => sum + tx.amount, 0);
@@ -17,14 +17,7 @@ export const apiService = {
       // CSVファイル保存処理
       await this.saveTransactionsToCSV(data);
       
-      // 成功レスポンスを返す
-      return {
-        transaction_id: `tx_${Date.now()}_${Math.random().toString(36).substring(2, 10)}`,
-        processed_at: new Date().toISOString(),
-        success: true,
-        transactions_count: data.transactions.length,
-        total_amount: totalAmount
-      };
+      return;
     } catch (error) {
       console.error('Error processing bulk transactions:', error);
       throw new Error(`Failed to process transactions: ${error.message}`);
@@ -35,7 +28,7 @@ export const apiService = {
   async saveTransactionsToCSV(data: SignatureRequest): Promise<void> {
     try {
       // 保存先ディレクトリを確認・作成
-      const csvDir = await this.getOrMakedirectoryPass(data.sender_wallet);
+      const csvDir = await this.getOrMakedirectoryPass(data.senderWallet);
 
       // ファイル名をウォレットアドレスに基づいて作成（日時を追加して重複防止）
       const fileName = `${data.signature}.csv`;
@@ -46,7 +39,7 @@ export const apiService = {
       
       // CSVデータ行を作成
       const csvRows = data.transactions.map(tx => 
-        `${tx.recipient_wallet},${tx.amount},${data.token_mint_address},${data.signature}`
+        `${tx.recipient_wallet},${tx.amount},${data.tokenMintAddress},${data.signature}`
       ).join('\n');
 
       // CSVファイルに書き込み
