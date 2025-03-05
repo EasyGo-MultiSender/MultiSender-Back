@@ -1,5 +1,5 @@
 // src/services/signature.ts
-import { SignatureRequest } from '../models/Signature';
+import { SignatureRequest } from '../models/Csv';
 import fs from 'fs';
 import path from 'path';
 
@@ -27,11 +27,11 @@ export const apiService = {
 
   async saveTransactionsToCSV(data: SignatureRequest): Promise<void> {
     try {
-      // 保存先ディレクトリを確認・作成
+      // 保存先ディレクトリを確認・なければ作成
       const csvDir = await this.getOrMakedirectoryPass(data.senderWallet);
 
       // ファイル名をウォレットアドレスに基づいて作成（日時を追加して重複防止）
-      const fileName = `${data.signature}.csv`;
+      const fileName = `${data.timeStamp}.csv`; // ファイル名はタイムスタンプ
       const filePath = path.join(csvDir, fileName);
 
       // CSVヘッダー
