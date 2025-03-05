@@ -12,7 +12,7 @@ export interface SignatureRequest {
   tokenType: string;
   tokenSymbol: string;
   tokenMintAddress: string; // 固定値
-  timeStamp: number; // unix time
+  timeStamp: string; // utc
   uuid: string; // どこまでが1transferかを識別するためのID
   transactions: Transaction[];
 }
