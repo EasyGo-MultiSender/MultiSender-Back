@@ -1,7 +1,7 @@
 // src/services/signature.ts
-import { SignatureRequest } from '../models/Csv';
-import fs from 'fs';
-import path from 'path';
+import { SignatureRequest } from "../models/Csv";
+import fs from "fs";
+import path from "path";
 
 export const apiService = {
   /**
@@ -11,22 +11,7 @@ export const apiService = {
    */
   async postSignature(data: SignatureRequest): Promise<void> {
     try {
-      // トランザクションの合計金額を計算
-      const totalAmount = data.transactions.reduce((sum, tx) => sum + tx.amount, 0);
       
-      // CSVファイル保存処理
-      await this.saveTransactionsToCSV(data);
-      
-      return;
-    } catch (error) {
-      console.error('Error processing bulk transactions:', error);
-      throw new Error(`Failed to process transactions: ${error.message}`);
-    }
-  },
-
-
-  async saveTransactionsToCSV(data: SignatureRequest): Promise<void> {
-    try {
       // 保存先ディレクトリを確認・なければ作成
       const csvDir = await this.getOrMakedirectoryPass(data.senderWallet);
 
@@ -35,19 +20,35 @@ export const apiService = {
       const filePath = path.join(csvDir, fileName);
 
       // CSVヘッダー
-      const csvHeader = 'recipient_wallet,amount,token_mint_address,signature\n';
-      
+      const csvHeader =
+        "signature,status,error,error_message,sender_wallet,token_type,token_symbol,time_stamp,uuid,recipient_wallet,amount\n";
+
       // CSVデータ行を作成
-      const csvRows = data.transactions.map(tx => 
-        `${tx.recipient_wallet},${tx.amount},${data.tokenMintAddress},${data.signature}`
-      ).join('\n');
+      const csvRows = data.transactions
+        .map(({ recipient_wallet, amount }) =>
+          [
+            data.signature,
+            data.status,
+            data.error,
+            data.errorMessage,
+            data.senderWallet,
+            data.tokenType,
+            data.tokenSymbol,
+            data.timeStamp,
+            data.uuid,
+            recipient_wallet,
+            amount,
+          ].join(",")
+        )
+        .join("\n");
 
       // CSVファイルに書き込み
-      await fs.promises.writeFile(filePath, csvHeader + csvRows, 'utf8');
-      
+      await fs.promises.writeFile(filePath, csvHeader + csvRows, "utf8");
+
+      return;
     } catch (error) {
-      console.error('Error saving CSV file:', error);
-      throw new Error(`Failed to save CSV file: ${error.message}`);
+      console.error("Error processing bulk transactions:", error);
+      throw new Error(`Failed to process transactions: ${error.message}`);
     }
   },
 
@@ -55,7 +56,7 @@ export const apiService = {
     try {
       // 保存先ディレクトリを確認・作成
       const firstChar = walletAddress.charAt(0);
-      const csvDir = path.join(process.cwd(), 'public', 'csv', firstChar, walletAddress);
+      const csvDir = path.join(process.cwd(), "public", "csv", firstChar, walletAddress);
 
       // ない場合は再帰的にディレクトリを生成
       if (!fs.existsSync(csvDir)) {
@@ -64,8 +65,8 @@ export const apiService = {
 
       return csvDir;
     } catch (error) {
-      console.error('Error saving CSV file:', error);
+      console.error("Error saving CSV file:", error);
       throw new Error(`Failed to save CSV file: ${error.message}`);
     }
-  }
+  },
 };
