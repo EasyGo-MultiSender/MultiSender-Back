@@ -8,6 +8,7 @@
     "esModuleInterop": true,                 
     "skipLibCheck": true,                     
     "forceConsistentCasingInFileNames": true,
+    "types": ["node", "@types/eslint", "jest"],
     "paths": {
       "@src/*": ["src/*"]
     },
@@ -23,6 +24,7 @@
   "include": [
     "src/**/*.ts",
     "spec/**/*.ts",
+    "tests/**/*.ts",
     "config.ts",
     "scripts",
     "eslint.config.ts"
