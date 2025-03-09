@@ -8,7 +8,7 @@
     "esModuleInterop": true,                 
     "skipLibCheck": true,                     
     "forceConsistentCasingInFileNames": true,
-    "types": ["node", "@types/eslint"],
+    "types": ["node", "@types/eslint", "jest"],
     "paths": {
       "@src/*": ["src/*"]
     },

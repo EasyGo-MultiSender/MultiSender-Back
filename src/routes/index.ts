@@ -22,7 +22,7 @@ router.post('/signature', async (req, res) => {
 
     // トランザクションの中身のバリデーション
     if (data.transactions.length === 0) {
-      console.log('data.transactions.length === 0');
+      console.log('data.transactions.length === 0',);
       throw new ValidationErr({
         message: '無効なリクエストです'
       });
