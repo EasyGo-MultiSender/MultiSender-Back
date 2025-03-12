@@ -16,8 +16,8 @@ export const csvListService = {
         return [];
       }
 
-      const files = await fs.promises.readdir(csvDir);
-      return files;
+      const files = await fs.promises.readdir(csvDir, { withFileTypes: true });
+      return files.map(file => file.name);
     } catch (error) {
       console.error("Error listing CSV files:", error);
       throw new Error(`Failed to list CSV files: ${error.message}`);
