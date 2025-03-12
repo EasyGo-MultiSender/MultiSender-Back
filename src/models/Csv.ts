@@ -5,9 +5,9 @@ export interface Transaction {
 
 export interface SignatureRequest {
   uuid: string; // どこまでが1transferかを識別するためのID
-  signature: string | null;
+  signature: string;
   status: string;
-  error: string | null;
+  error: string;
   errorMessage?: string;
   senderWallet: string;
   tokenType: string;
