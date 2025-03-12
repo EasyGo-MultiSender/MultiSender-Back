@@ -36,8 +36,7 @@ router.post('/signature', async (req, res) => {
     
     // すべてのフィールドの必須チェック
     if (!data.uuid || !data.status ||
-        !data.senderWallet || !data.tokenType || !data.tokenSymbol || 
-        !data.tokenMintAddress || !data.timeStamp || !Array.isArray(data.transactions)) {
+        !data.senderWallet || !data.tokenType || !data.timeStamp || !Array.isArray(data.transactions)) {
       console.log('data', data);
       throw new ValidationErr({
         message: '無効なリクエストです'
