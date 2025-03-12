@@ -34,7 +34,10 @@ export const apiService = {
         )
         .join("\n");
 
-      await fs.promises.appendFile(filePath, csvRows, "utf8");
+      // 必ず最後に改行を追加
+      const csvContent = csvRows + "\n";
+
+      await fs.promises.appendFile(filePath, csvContent, "utf8");
 
       return;
     } catch (error) {
@@ -91,7 +94,7 @@ export const apiService = {
       // 一致するファイルがない場合は新規作成
       const uuidPrefix = uuid.substring(0, 4); // 前六文字をファイル名に付ける
 
-      const timeStampStr = ToCsvFileTimeStamp(timeStamp)
+      const timeStampStr = ToCsvFileTimeStamp(timeStamp);
       const newFilePath = path.join(csvDir, `${timeStamp}_${uuidPrefix}.csv`);
       const csvHeader =
         "uuid,signature,status,error,error_message,sender_wallet,token_type,token_symbol,token_mint_address,time_stamp,recipient_wallet,amount\n";
@@ -107,7 +110,11 @@ export const apiService = {
 
 const ToCsvFileTimeStamp = (timeStamp: string): string => {
   const date = new Date(timeStamp);
-  return `${date.getFullYear()}${String(date.getMonth() + 1).padStart(2, '0')}${String(date.getDate()).padStart(2, '0')}T${String(date.getHours()).padStart(2, '0')}${String(date.getMinutes()).padStart(2, '0')}${String(date.getSeconds()).padStart(2, '0')}Z`;
+  return `${date.getFullYear()}${String(date.getMonth() + 1).padStart(2, "0")}${String(
+    date.getDate()
+  ).padStart(2, "0")}T${String(date.getHours()).padStart(2, "0")}${String(
+    date.getMinutes()
+  ).padStart(2, "0")}${String(date.getSeconds()).padStart(2, "0")}Z`;
 };
 
 // 計算するために2014-10-10T04:50:40Z に変換する.
