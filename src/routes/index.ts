@@ -35,7 +35,7 @@ router.post('/signature', async (req, res) => {
     const data = req.body as SignatureRequest;
     
     // すべてのフィールドの必須チェック
-    if (!data.uuid || !data.status || !data.error ||
+    if (!data.uuid || !data.status ||
         !data.senderWallet || !data.tokenType || !data.tokenSymbol || 
         !data.tokenMintAddress || !data.timeStamp || !Array.isArray(data.transactions)) {
       console.log('data', data);
