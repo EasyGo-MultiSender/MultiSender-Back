@@ -27,7 +27,7 @@ describe('API Routes', () => {
       const testData: SignatureRequest = {
         uuid: '01957970-37f7-722e-bab7-df781222aaf5',
         signature: "539uCFvqfCLK8mmoxphzpjiwaP3yQmX1yxot7rD3cvwAXWpZN78Zhc39m9GBrKmU8Hhe5Xtz8CVxpkS8NcKDmR3F",
-        status: 'succsess',
+        status: 'success',
         error: null,
         senderWallet: 'lsa1Ty43hxFhAMZfKe3CCanDWuD8EJkC6Q2yUj',
         tokenType: 'test-token-type',
@@ -126,7 +126,7 @@ describe('API Routes', () => {
       const invalidData: SignatureRequest = {
         uuid: '01957970-37f7-722e-bab7-df781222aaf5',
         signature: "539uCFvqfCLK8mmoxphzpjiwaP3yQmX1yxot7rD3cvwAXWpZN78Zhc39m9GBrKmU8Hhe5Xtz8CVxpkS8NcKDmR3F",
-        status: 'succsess',
+        status: 'success',
         error: null,
         senderWallet: 'lsa1Ty43hxFhAMZfKe3CCanDWuD8EJkC6Q2yUj',
         tokenType: 'test-token-type',
@@ -149,7 +149,7 @@ describe('API Routes', () => {
       const invalidData: SignatureRequest = {
         uuid: '01957970-37f7-722e-bab7-df781222aaf5',
         signature: "539uCFvqfCLK8mmoxphzpjiwaP3yQmX1yxot7rD3cvwAXWpZN78Zhc39m9GBrKmU8Hhe5Xtz8CVxpkS8NcKDmR3F",
-        status: 'succsess',
+        status: 'success',
         error: null,
         senderWallet: 'lsa1Ty43hxFhAMZfKe3CCanDWuD8EJkC6Q2yUj',
         tokenType: 'test-token-type',

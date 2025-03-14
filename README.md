@@ -44,7 +44,7 @@ csv の保存処理を書いている。
     {
     "signature": "539uCFvqfCLK8mmoxphzpjiwaP3yQmX1yxot7rD3cvwAXWpZN78Zhc39m9GBrKmU8Hhe5Xtz8CVxpkS8NcKDmR3F",
     "senderWallet": "3bJP1Thy43hxFhAMZfPKeu3CCanDWuD8EJkC6Q2yUj",
-    "status" :"succsess",
+    "status" :"success",
     "error" : null,
     "errorMessage" : "errorMessage",
     "tokenType": "tokenType",
