@@ -8,7 +8,7 @@ import { NodeEnvs } from "./constants";
                                  Setup
 ******************************************************************************/
 
-const secretEnv = dotenv.config({ path: "./config/secret.env" });
+dotenv.config({ path: "./config/.env" });
 
 const ENV = jetEnv({
   NodeEnv: isEnumVal(NodeEnvs),
