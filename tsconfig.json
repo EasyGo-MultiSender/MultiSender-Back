@@ -22,6 +22,6 @@
     "swc": true,
     "require": ["tsconfig-paths/register", "./config.ts"]
   },
-  "include": ["src/**/*.ts"],
+  "include": ["src/**/*.ts", "config.ts"],
   "exclude": ["src/public/*"]
 }
