@@ -1,0 +1,45 @@
+name: 'DEMO Build and Deploy'
+on:
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+          
+      - name: Install dependencies
+        run: |
+          npm ci
+          
+      - name: Build project
+        run: npm run build
+        
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.7.0
+        with:
+          ssh-private-key: ${{ secrets.DEMO_DEPLOY_SSH_KEY }}
+          
+      - name: Deploy to server
+        env:
+          DEPLOY_HOST: ${{ secrets.DEMO_DEPLOY_HOST }}
+          DEPLOY_USER: ${{ secrets.DEMO_DEPLOY_USER }}
+          DEPLOY_PATH: /var/www/vhosts/dev-multisender.gz-dev.com_test
+        run: |
+          # ホストキーのチェックをスキップするための設定
+          mkdir -p ~/.ssh
+          echo "StrictHostKeyChecking no" >> ~/.ssh/config
+          
+          # デプロイ先ディレクトリを作成
+          ssh $DEPLOY_USER@$DEPLOY_HOST "mkdir -p $DEPLOY_PATH"
+          
+          # rsyncを使用してcurrentディレクトリの内容をデプロイ（publicディレクトリを除外）
+          rsync -av --exclude="public" ./ $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH/
+          
+          echo "デプロイが完了しました"
