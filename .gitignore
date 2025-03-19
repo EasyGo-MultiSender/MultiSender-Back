@@ -4,3 +4,4 @@ temp/
 **/**/*.log
 config.js
 public/csv/*
+secret.env

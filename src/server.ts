@@ -36,7 +36,7 @@ if (ENV.NodeEnv === NodeEnvs.Dev) {
     cors({
       origin: "http://localhost:5173", // Allow requests from the frontend development server
       methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-      allowedHeaders: ["Content-Type", "Authorization"],
+      allowedHeaders: ["Content-Type", "Authorization", "X-Recaptcha-Token"],
     })
   );
 }
@@ -61,7 +61,6 @@ app.use((err: Error, _: Request, res: Response, next: NextFunction) => {
   }
   return next(err);
 });
-
 
 /******************************************************************************
                                 Export default
