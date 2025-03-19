@@ -30,7 +30,7 @@ jobs:
         env:
           DEPLOY_HOST: ${{ secrets.DEMO_DEPLOY_HOST }}
           DEPLOY_USER: ${{ secrets.DEMO_DEPLOY_USER }}
-          DEPLOY_PATH: /var/www/vhosts/dev-multisender.gz-dev.com_test
+          DEPLOY_PATH: /var/www/vhosts/dev-multisender.gz-dev.com
         run: |
           # ホストキーのチェックをスキップするための設定
           mkdir -p ~/.ssh
