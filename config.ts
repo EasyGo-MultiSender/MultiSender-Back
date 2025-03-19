@@ -11,6 +11,7 @@ const NODE_ENV = process.env.NODE_ENV ?? "development";
 const result2 = dotenv.config({
   path: path.join(process.cwd(), `./config/.env.${NODE_ENV}`),
 });
+
 if (result2.error) {
   throw result2.error;
 }
