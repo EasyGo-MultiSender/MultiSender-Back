@@ -42,4 +42,7 @@ jobs:
           # rsyncを使用してcurrentディレクトリの内容をデプロイ（publicディレクトリを除外）
           rsync -av --exclude="public" ./ $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH/
           
+          # PM2のリロードを実行
+          ssh $DEPLOY_USER@$DEPLOY_HOST "cd $DEPLOY_PATH && pm2 reload multisender-pm2"
+          
           echo "デプロイが完了しました"
