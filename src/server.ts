@@ -55,7 +55,7 @@ app.use(express.static("public"));
 // CSVファイル専用のルート
 app.get("/csv/*", (req, res) => {
   // /csvで始まるパスへのリクエストはpublic/csvディレクトリのファイルを直接提供
-  const csvPath = req.path.replace("/csv/", "");
+  const csvPath = req.path.slice(5);
   res.sendFile(path.join(__dirname, "../public/csv", csvPath));
 });
 
