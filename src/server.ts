@@ -60,11 +60,11 @@ app.get("/csv/*", (req, res) => {
   const fullPath = path.join(csvDir, csvPath);
 
   // fullPathがcsvDirの中にあるか確認
-  if (!fullPath.startsWith(csvDir)) {
+  const relativePath = path.relative(csvDir, fullPath);
+  if (relativePath.startsWith('..') || path.isAbsolute(relativePath)) {
     res.status(400).send("Invalid path");
     return;
   }
-
   res.sendFile(fullPath);
 });
 
