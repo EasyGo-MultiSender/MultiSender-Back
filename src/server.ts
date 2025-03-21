@@ -49,6 +49,27 @@ if (ENV.NodeEnv === NodeEnvs.Production) {
 // Add APIs, must be after middleware
 app.use(Paths.Base, BaseRouter);
 
+// 静的ファイルを提供するための設定（public ディレクトリを使用）
+app.use(express.static("public"));
+
+// CSVファイル専用のルート
+app.get("/csv/*", (req, res) => {
+  // /csvで始まるパスへのリクエストはpublic/csvディレクトリのファイルを直接提供
+  const csvPath = req.path.slice(5);
+  res.sendFile(path.join(__dirname, "../public/csv", csvPath));
+});
+
+// APIとCSV以外のすべてのリクエストをReactアプリにリダイレクト
+app.get("*", (req, res, next) => {
+  // APIリクエストはここで処理しない
+  if (req.url.startsWith("/api/")) {
+    return next();
+  }
+
+  // それ以外のリクエストはindex.htmlを返す
+  res.sendFile(path.join(__dirname, "../public", "index.html"));
+});
+
 // Add error handler
 app.use((err: Error, _: Request, res: Response, next: NextFunction) => {
   if (ENV.NodeEnv !== NodeEnvs.Test.valueOf()) {
