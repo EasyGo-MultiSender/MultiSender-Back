@@ -55,8 +55,17 @@ app.use(express.static("public"));
 // CSVファイル専用のルート
 app.get("/csv/*", (req, res) => {
   // /csvで始まるパスへのリクエストはpublic/csvディレクトリのファイルを直接提供
-  const csvPath = req.path.slice(5);
-  res.sendFile(path.join(__dirname, "../public/csv", csvPath));
+  const csvPath = path.normalize(req.path.slice(5));
+  const csvDir = path.join(__dirname, "../public/csv");
+  const fullPath = path.join(csvDir, csvPath);
+
+  // fullPathがcsvDirの中にあるか確認
+  if (!fullPath.startsWith(csvDir)) {
+    res.status(400).send("Invalid path");
+    return;
+  }
+
+  res.sendFile(fullPath);
 });
 
 // APIとCSV以外のすべてのリクエストをReactアプリにリダイレクト
