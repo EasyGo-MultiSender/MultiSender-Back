@@ -85,7 +85,6 @@ app.get("/csv/*", (req, res) => {
     const relativePathParts = path.relative(csvDir, fullPath).split(path.sep);
     if (
       relativePathParts[0] === ".." ||
-      path.isAbsolute(fullPath) ||
       !fullPath.startsWith(csvDir + path.sep)
     ) {
       res.status(400).send("無効なファイルパスです");
