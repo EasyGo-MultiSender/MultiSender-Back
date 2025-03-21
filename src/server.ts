@@ -49,6 +49,9 @@ if (ENV.NodeEnv === NodeEnvs.Production) {
 // Add APIs, must be after middleware
 app.use(Paths.Base, BaseRouter);
 
+// 静的ファイルを提供するための設定（public ディレクトリを使用）
+app.use(express.static('public'))
+
 // Add error handler
 app.use((err: Error, _: Request, res: Response, next: NextFunction) => {
   if (ENV.NodeEnv !== NodeEnvs.Test.valueOf()) {
