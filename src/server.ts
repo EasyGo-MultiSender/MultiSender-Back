@@ -54,18 +54,48 @@ app.use(express.static("public"));
 
 // CSVファイル専用のルート
 app.get("/csv/*", (req, res) => {
-  // /csvで始まるパスへのリクエストはpublic/csvディレクトリのファイルを直接提供
-  const csvPath = path.normalize(req.path.slice(5));
-  const csvDir = path.join(__dirname, "../public/csv");
-  const fullPath = path.join(csvDir, csvPath);
+  try {
+    // ファイル名の検証（ディレクトリトラバーサル対策）
+    let requestPath = req.path.slice(5); // "/csv/" の部分を削除
 
-  // fullPathがcsvDirの中にあるか確認
-  const relativePath = path.relative(csvDir, fullPath);
-  if (relativePath.startsWith('..') || path.isAbsolute(relativePath)) {
-    res.status(400).send("Invalid path");
-    return;
+    // 先頭のスラッシュを削除して相対パスを確保
+    requestPath = requestPath.replace(/^\/+/, "");
+
+    // 危険な文字や不正なパターンを含むパスを拒否
+    if (
+      requestPath.includes("..") ||
+      requestPath.includes("~") ||
+      !requestPath.endsWith(".csv") ||
+      /[<>:"\\|?*]/.test(requestPath)
+    ) {
+      res.status(400).send("無効なファイルパスです");
+      return;
+    }
+
+    // 安全なパス構築
+    const csvDir = path.resolve(__dirname, "../public/csv");
+    // 悪意のある..パターンを完全に削除（先頭のスラッシュはすでに削除済み）
+    const normalizedPath = path.normalize(requestPath);
+    const fullPath = path.join(csvDir, normalizedPath);
+
+    // パスの検証 - csvDirの外にアクセスしようとしていないか確認
+    // クロスプラットフォーム対応の改良された検証
+    const relativePathParts = path.relative(csvDir, fullPath).split(path.sep);
+    if (
+      relativePathParts[0] === ".." ||
+      path.isAbsolute(fullPath) ||
+      !fullPath.startsWith(csvDir + path.sep)
+    ) {
+      res.status(400).send("無効なファイルパスです");
+      return;
+    }
+
+    // ファイルの存在確認
+    res.sendFile(fullPath);
+  } catch (err) {
+    logger.err(`CSVファイルアクセスエラー: ${err}`);
+    res.status(500).send("サーバーエラーが発生しました");
   }
-  res.sendFile(fullPath);
 });
 
 // APIとCSV以外のすべてのリクエストをReactアプリにリダイレクト
