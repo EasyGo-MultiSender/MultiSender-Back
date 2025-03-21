@@ -58,9 +58,11 @@ app.get("/csv/*", (req, res) => {
     // ファイル名の検証（ディレクトリトラバーサル対策）
     let requestPath = req.path.slice(5); // "/csv/" の部分を削除
 
+    // Decode URI components to handle encoded characters
+    requestPath = decodeURIComponent(requestPath);
+
     // 先頭のスラッシュを削除して相対パスを確保
     requestPath = requestPath.replace(/^\/+/, "");
-
     // 危険な文字や不正なパターンを含むパスを拒否
     if (
       requestPath.includes("..") ||
