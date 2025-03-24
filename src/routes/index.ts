@@ -1,8 +1,14 @@
-import express from "express";
+import express, { Request, Response } from "express";
 import { apiService } from "../services/csv";
 import { csvListService } from "../services/csvList";
 import { SignatureRequest } from "../models/Csv";
 import { ValidationErr } from "../common/route-errors";
+import {
+  verifyRecaptcha,
+  RecaptchaVerifyRequest,
+  RecaptchaVerifyResponse,
+  checkRecaptchaScore,
+} from "@src/middleware/recaptcha";
 
 const router = express.Router();
 
@@ -29,6 +35,31 @@ router.get("/csv/:walletAddress", async (req, res) => {
     }
   }
 });
+
+// reCAPTCHA検証用エンドポイント
+router.post(
+  "/recaptcha/verify",
+  verifyRecaptcha,
+  checkRecaptchaScore,
+  (req: Request, res: Response): void => {
+    try {
+      const { token } = req.body as RecaptchaVerifyRequest;
+
+      // 検証成功
+      const response: RecaptchaVerifyResponse = {
+        success: true,
+      };
+      res.json(response);
+    } catch (error) {
+      console.error("reCAPTCHA verification error:", error);
+      const response: RecaptchaVerifyResponse = {
+        success: false,
+        error: "Internal Server Error",
+      };
+      res.status(500).json(response);
+    }
+  }
+);
 
 router.post("/signature", async (req, res) => {
   try {
