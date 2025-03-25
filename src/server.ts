@@ -21,6 +21,13 @@ import { NodeEnvs } from "@src/common/constants";
 
 const app = express();
 
+// プロジェクトルートとパスの設定
+const PROJECT_ROOT = ENV.NodeEnv === NodeEnvs.Dev
+  ? path.resolve(__dirname, "..")        // 開発環境: /src
+  : path.resolve(__dirname, "../.."); // 本番/ステージング環境: /dist/src
+
+const PUBLIC_PATH = path.join(PROJECT_ROOT, "public");
+
 // **** Middleware **** //
 
 // Basic middleware
@@ -50,7 +57,7 @@ if (ENV.NodeEnv === NodeEnvs.Production) {
 app.use(Paths.Base, BaseRouter);
 
 // 静的ファイルを提供するための設定（public ディレクトリを使用）
-app.use(express.static("public"));
+app.use(express.static(PUBLIC_PATH));
 
 // CSVファイル専用のルート
 app.get("/csv/*", (req, res) => {
@@ -75,7 +82,7 @@ app.get("/csv/*", (req, res) => {
     }
 
     // 安全なパス構築
-    const csvDir = path.resolve(__dirname, "../public/csv");
+    const csvDir = path.join(PUBLIC_PATH, "csv");
     // 悪意のある..パターンを完全に削除（先頭のスラッシュはすでに削除済み）
     const normalizedPath = path.normalize(requestPath);
     const fullPath = path.join(csvDir, normalizedPath);
@@ -99,24 +106,14 @@ app.get("/csv/*", (req, res) => {
   }
 });
 
-// /senderと/historyのルーティング
-app.get("/sender", (req, res) => {
-  res.sendFile(path.join(__dirname, "../public", "index.html"));
-});
-
-app.get("/history", (req, res) => {
-  res.sendFile(path.join(__dirname, "../public", "index.html"));
-});
-
 // APIとCSV以外のすべてのリクエストをReactアプリにリダイレクト
 app.get("*", (req, res, next) => {
   // APIリクエストはここで処理しない
   if (req.url.startsWith("/api/")) {
     return next();
   }
-
-  // それ以外のリクエストはindex.htmlを返す
-  res.sendFile(path.join(__dirname, "../public", "index.html"));
+  // それ以外は全てindex.htmlを返す
+  res.sendFile(path.join(PUBLIC_PATH, "index.html"));
 });
 
 // Add error handler
