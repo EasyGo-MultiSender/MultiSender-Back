@@ -99,6 +99,15 @@ app.get("/csv/*", (req, res) => {
   }
 });
 
+// /senderと/historyのルーティング
+app.get("/sender", (req, res) => {
+  res.sendFile(path.join(__dirname, "../public", "index.html"));
+});
+
+app.get("/history", (req, res) => {
+  res.sendFile(path.join(__dirname, "../public", "index.html"));
+});
+
 // APIとCSV以外のすべてのリクエストをReactアプリにリダイレクト
 app.get("*", (req, res, next) => {
   // APIリクエストはここで処理しない
