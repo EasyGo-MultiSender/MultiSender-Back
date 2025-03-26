@@ -1,6 +1,13 @@
 name: 'DEMO Build and Deploy'
 on:
   workflow_dispatch:
+    app-path:
+      description: 'Select App Path'
+      required: true
+      default: 'staging'
+      type: choice
+      options:
+        - '/var/www/vhosts/dev-multisender.gz-dev.com'
 
 jobs:
   build-and-deploy:
@@ -30,7 +37,7 @@ jobs:
         env:
           DEPLOY_HOST: ${{ secrets.DEMO_DEPLOY_HOST }}
           DEPLOY_USER: ${{ secrets.DEMO_DEPLOY_USER }}
-          DEPLOY_PATH: /var/www/vhosts/dev-multisender.gz-dev.com
+          DEPLOY_PATH: ${{ github.event.inputs.app-path }}
         run: |
           # ホストキーのチェックをスキップするための設定
           mkdir -p ~/.ssh

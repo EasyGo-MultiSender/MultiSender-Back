@@ -1,0 +1,64 @@
+name: Build & Deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Select Environment'
+        required: true
+        default: 'staging'
+        type: choice
+        options:
+          - staging
+          - production
+      app-path:
+        description: 'Select App Path'
+        required: true
+        default: 'staging'
+        type: choice
+        options:
+          - '/var/www/vhosts/multisender.easy-go.me'
+          - '/var/www/vhosts/multisender.easy-go.me_test_deploy'
+
+jobs:
+  vars:
+    name: Vars Job
+    runs-on: ubuntu-latest
+    if: github.event.inputs.environment == 'production'
+    outputs:
+      environment: ${{ github.event.inputs.environment }}
+      artifact-name: 'back_dist'
+      artifact-path: 'dist'
+      node-version: '22'
+      app-path: ${{ github.event.inputs.app-path }}
+    steps:
+      - run: echo "Set production environment variables"
+
+  test_deploy:
+    name: Test Deploy Connections Job
+    needs: vars
+    uses: ./.github/workflows/test_deploy.yml
+    secrets: inherit
+
+  build:
+    name: Build Job
+    needs: vars
+    uses: ./.github/workflows/_build.yml
+    with:
+      node-version: ${{ needs.vars.outputs.node-version }}
+      artifact-name: ${{ needs.vars.outputs.artifact-name }}
+      artifact-path: ${{ needs.vars.outputs.artifact-path }}
+
+  deploy:
+    name: Deploy Job
+    needs:
+      - vars
+      - build
+      - test_deploy
+    if: needs.vars.outputs.environment == 'production'
+    uses: ./.github/workflows/_prod_deploy.yml
+    with:
+      app-path: ${{ needs.vars.outputs.app-path }}
+      artifact-name: ${{ needs.vars.outputs.artifact-name }}
+      artifact-path: ${{ needs.vars.outputs.artifact-path }}
+    secrets: inherit
