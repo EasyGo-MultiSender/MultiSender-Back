@@ -35,7 +35,7 @@ jobs:
           echo "AWS_DEPLOY_PREFIX=deployments" >> $GITHUB_OUTPUT
 
       - name: Checkout code
-      - uses: actions/checkout@v4
+        uses: actions/checkout@v4
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
