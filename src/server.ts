@@ -50,7 +50,26 @@ if (ENV.NodeEnv === NodeEnvs.Dev) {
 
 // Security
 if (ENV.NodeEnv === NodeEnvs.Production) {
-  app.use(helmet());
+  app.use(
+    helmet({
+      contentSecurityPolicy: {
+        directives: {
+          defaultSrc: ["'self'"],
+          connectSrc: ["'self'", "https://multisender.easy-go.me"], // ← 必要な外部APIを許可
+          scriptSrc: ["'self'", "'unsafe-inline'"], // ← 必要ならJSの制限緩和
+          styleSrc: ["'self'", "'unsafe-inline'", "https:"],
+          imgSrc: ["'self'", "data:"],
+          fontSrc: ["'self'", "data:", "https:"],
+          objectSrc: ["'none'"],
+          upgradeInsecureRequests: [],
+        },
+      },
+      crossOriginEmbedderPolicy: true,
+      referrerPolicy: { policy: 'no-referrer' },
+      frameguard: { action: 'sameorigin' },
+      xssFilter: false, // 非推奨になってるため無効でOK
+    })
+  );
 }
 
 // Add APIs, must be after middleware
