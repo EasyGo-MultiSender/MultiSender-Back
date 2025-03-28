@@ -48,6 +48,11 @@ jobs:
     outputs:
       build-directory: ${{ steps.build-step.outputs.build-directory }}
     steps:
+      - name: Check input
+        run: |          
+          echo "name: ${{ inputs.artifact-name }}"
+          echo "path: ${{ inputs.artifact-path }}"
+
       - name: Checkout code
         uses: actions/checkout@v4
 
