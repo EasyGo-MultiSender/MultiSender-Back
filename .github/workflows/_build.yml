@@ -67,6 +67,10 @@ jobs:
           rm -rf node_modules package-lock.json
           npm cache clean --force
 
+      - name: File List
+        run: |
+          ls -la ${{ steps.build-step.outputs.build-directory }}
+
       - name: Install dependencies
         run: |
           npm install --legacy-peer-deps
@@ -78,8 +82,13 @@ jobs:
           npm run build
           echo "build-directory=$(pwd)/${{ inputs.artifact-path }}" >> $GITHUB_OUTPUT
 
+      - name: File List
+        run: |
+          ls -la ${{ steps.build-step.outputs.build-directory }}
+
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
           name: ${{ inputs.artifact-name }}
-          path: ${{ inputs.artifact-path }}
+          path: ${{ steps.build-step.outputs.build-directory }}
+          include-hidden-files: true
