@@ -91,3 +91,4 @@ jobs:
         with:
           name: ${{ inputs.artifact-name }}
           path: ${{ steps.build-step.outputs.build-directory }}
+          include-hidden-files: true
