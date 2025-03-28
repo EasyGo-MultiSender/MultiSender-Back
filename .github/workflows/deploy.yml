@@ -28,7 +28,7 @@ jobs:
     outputs:
       environment: ${{ github.event.inputs.environment }}
       artifact-name: 'back_dist'
-      artifact-path: './'
+      artifact-path: ''
       node-version: '22'
       app-path: ${{ github.event.inputs.app-path }}
     steps:
