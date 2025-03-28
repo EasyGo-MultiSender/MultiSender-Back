@@ -17,7 +17,7 @@ on:
         description: 'Path to the directory to upload'
         required: false
         type: string
-        default: './'
+        default: 'dist'
     outputs:
       build-directory:
         description: 'Path to the build directory'
