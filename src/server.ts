@@ -55,19 +55,28 @@ if (ENV.NodeEnv === NodeEnvs.Production) {
       contentSecurityPolicy: {
         directives: {
           defaultSrc: ["'self'"],
-          connectSrc: ["'self'", "https://multisender.easy-go.me"], // ← 必要な外部APIを許可
-          scriptSrc: ["'self'", "'unsafe-inline'"], // ← 必要ならJSの制限緩和
+          connectSrc: [
+            "'self'",
+            "https://devnet.helius-rpc.com",
+            "https://api.helius.xyz", // Heliusの代替ドメインがある場合も追加
+          ],
+          scriptSrc: [
+            "'self'",
+            "'unsafe-inline'",
+            "https://www.google.com",
+            "https://www.gstatic.com", // ← reCAPTCHAに必要
+          ],
+          scriptSrcAttr: ["'none'"],
           styleSrc: ["'self'", "'unsafe-inline'", "https:"],
           imgSrc: ["'self'", "data:"],
           fontSrc: ["'self'", "data:", "https:"],
           objectSrc: ["'none'"],
+          baseUri: ["'self'"],
+          formAction: ["'self'"],
+          frameAncestors: ["'self'"],
           upgradeInsecureRequests: [],
         },
       },
-      crossOriginEmbedderPolicy: true,
-      referrerPolicy: { policy: 'no-referrer' },
-      frameguard: { action: 'sameorigin' },
-      xssFilter: false, // 非推奨になってるため無効でOK
     })
   );
 }
