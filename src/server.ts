@@ -37,16 +37,16 @@ app.use(express.urlencoded({ extended: true }));
 // Show routes called in console during development
 if (ENV.NodeEnv === NodeEnvs.Dev) {
   app.use(morgan("dev"));
-
-  // Add CORS for development environment only
-  app.use(
-    cors({
-      origin: "http://localhost:5173", // Allow requests from the frontend development server
-      methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-      allowedHeaders: ["Content-Type", "Authorization", "X-Recaptcha-Token"],
-    })
-  );
 }
+
+// CORS configuration - allow all domains
+app.use(
+  cors({
+    origin: "*",
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization", "X-Recaptcha-Token"],
+  })
+);
 
 // Security
 if (ENV.NodeEnv === NodeEnvs.Production) {
@@ -54,29 +54,21 @@ if (ENV.NodeEnv === NodeEnvs.Production) {
     helmet({
       contentSecurityPolicy: {
         directives: {
-          defaultSrc: ["'self'"],
-          connectSrc: [
-            "'self'",
-            "https://devnet.helius-rpc.com",
-            "https://api.helius.xyz", // Heliusの代替ドメインがある場合も追加
-          ],
-          scriptSrc: [
-            "'self'",
-            "'unsafe-inline'",
-            "https://www.google.com",
-            "https://www.gstatic.com", // ← reCAPTCHAに必要
-          ],
-          scriptSrcAttr: ["'none'"],
-          styleSrc: ["'self'", "'unsafe-inline'", "https:"],
-          imgSrc: ["'self'", "data:"],
-          fontSrc: ["'self'", "data:", "https:"],
+          defaultSrc: ["'self'", "*"],
+          connectSrc: ["'self'", "*"],
+          scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'", "*"],
+          styleSrc: ["'self'", "'unsafe-inline'", "*"],
+          imgSrc: ["'self'", "data:", "*"],
+          fontSrc: ["'self'", "data:", "*"],
           objectSrc: ["'none'"],
           baseUri: ["'self'"],
-          formAction: ["'self'"],
-          frameAncestors: ["'self'"],
-          upgradeInsecureRequests: [],
-        },
+          formAction: ["'self'", "*"],
+          frameAncestors: ["'none'"],
+          upgradeInsecureRequests: []
+        }
       },
+      crossOriginEmbedderPolicy: false,
+      crossOriginResourcePolicy: { policy: "cross-origin" }
     })
   );
 }
