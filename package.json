@@ -7,8 +7,8 @@
     "dev": "NODE_ENV=development ts-node ./src",
     "dev:hot": "nodemon --exec \"npm run dev\" --watch ./src --ext .ts",
     "lint": "eslint --flag unstable_ts_config",
-    "stg": "cross-env NODE_ENV=staging npm run build && cross-env NODE_ENV=staging node -r ./dist/config.js ./dist/src/index.js",
-    "prod": "cross-env NODE_ENV=production npm run build && cross-env NODE_ENV=production node -r ./dist/config.js ./dist/src/index.js",
+    "stg": "cross-env NODE_ENV=staging node -r ./dist/config.js ./dist/src/index.js",
+    "prod": "cross-env NODE_ENV=production node -r ./dist/config.js ./dist/src/index.js",
     "test": "NODE_ENV=test jest",
     "test:watch": "NODE_ENV=test jest --watch",
     "test:coverage": "NODE_ENV=test jest --coverage",
@@ -20,6 +20,7 @@
   "dependencies": {
     "@types/cors": "^2.8.17",
     "arg": "^5.0.2",
+    "axios": "^1.8.3",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "date-fns": "^4.1.0",
@@ -36,7 +37,8 @@
     "jet-validators": "^1.1.1",
     "jsonfile": "^6.1.0",
     "module-alias": "^2.2.3",
-    "morgan": "^1.10.0"
+    "morgan": "^1.10.0",
+    "recaptcha-v3": "^1.11.3"
   },
   "devDependencies": {
     "@eslint/js": "^9.21.0",
