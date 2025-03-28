@@ -1,72 +1,126 @@
-# bulksender-backend
+# BulkSender バックエンド
+
+BulkSenderは複数の宛先に一括でトークン送信するためのバックエンドサービスです。送信トランザクションの詳細を受け取り、CSVファイルとして保存します。
+
+## 機能概要
+
+- トランザクション情報のCSV保存
+- ウォレットアドレスごとのCSV管理
+- 古いCSVファイルの自動削除（3ヶ月以上経過したもの）
+- REST APIによるトランザクション情報の送信
+
+## 技術スタック
+
+- **言語**: TypeScript / JavaScript
+- **フレームワーク**: Express.js
+- **開発環境**: Node.js (v16以上)
+- **その他の主要ライブラリ**:
+  - date-fns: 日付の操作
+  - helmet: セキュリティ対策
+  - cors: クロスオリジンリクエスト対応
+  - jet-logger: ログ出力
 
 ## ディレクトリ構成
 
-### src/common
+```
+.
+├── config/               - 環境設定ファイル
+├── src/
+│   ├── batchs/           - バッチ処理（古いCSVファイル削除など）
+│   ├── common/           - 共通設定（パス、ステータスコード等）
+│   ├── model/            - データモデル定義
+│   ├── routes/           - APIエンドポイント定義
+│   ├── services/         - ビジネスロジック
+│   └── util/             - ユーティリティ関数
+├── public/
+│   └── csv/              - 保存されたCSVファイル
+└── tests/                - テストファイル
+```
 
-パスの設定やステータスコードの設定が諸々書いてある。さわっていない
+## 環境設定
 
-### src/model
+環境ごとに異なる設定を使用できます：
 
-型の定義が書いてある。
+- 開発環境: `config/.env.development`
+- ステージング環境: `config/.env.staging`
+- 本番環境: `config/.env.production`
 
-### src/service
+## インストールと実行
 
-api の処理の部分を書く
+### 必要条件
 
-### src/routes
+- Node.js v16.0.0以上
+- npm
 
-エンドポイントの設定を書いてある。今回は一つしかない。
+### インストール
 
-### src/util
+```bash
+npm install
+```
 
-csv の保存処理を書いている。
+### 開発モードで実行
 
-### public
+```bash
+npm run dev
+```
 
-現状は csv が保存してある。
+ホットリロード対応の開発モード：
 
-## 使用方法
+```bash
+npm run dev:hot
+```
 
-まず、`npm install`を実行して依存関係をインストールしてください。
+### ビルドと本番実行
 
-その後、`npm run dev`を実行してサーバーを起動してください。
+```bash
+npm run build
+npm run prod  # 本番環境で実行
+npm run stg   # ステージング環境で実行
+```
 
-## API
-
-現在は`http://localhost:3000/api/signature`に POST リクエストを送ることで、csv の post リクエストを送ることが出来ます
+## API仕様
 
 ### POST /api/signature
 
-#### Request
+トランザクション情報を受け取り、CSVファイルとして保存します。
+
+#### リクエスト例
 
 ```json
+{
+  "signature": "539uCFvqfCLK8mmoxphzpjiwaP3yQmX1yxot7rD3cvwAXWpZN78Zhc39m9GBrKmU8Hhe5Xtz8CVxpkS8NcKDmR3F",
+  "senderWallet": "3bJP1Thy43hxFhAMZfPKeu3CCanDWuD8EJkC6Q2yUj",
+  "status": "success",
+  "error": null,
+  "errorMessage": "errorMessage",
+  "tokenType": "tokenType",
+  "tokenSymbol": "symbol",
+  "tokenMintAddress": "So11111111111111111111111111111111111111111",
+  "timeStamp": "20141010T045040Z",  // ISO 8601形式で指定
+  "uuid": "strng",
+  "transactions": [
     {
-    "signature": "539uCFvqfCLK8mmoxphzpjiwaP3yQmX1yxot7rD3cvwAXWpZN78Zhc39m9GBrKmU8Hhe5Xtz8CVxpkS8NcKDmR3F",
-    "senderWallet": "3bJP1Thy43hxFhAMZfPKeu3CCanDWuD8EJkC6Q2yUj",
-    "status" :"success",
-    "error" : null,
-    "errorMessage" : "errorMessage",
-    "tokenType": "tokenType",
-    "tokenSymbol" : "symbol",
-    "tokenMintAddress": "So11111111111111111111111111111111111111111",
-    "timeStamp": "20141010T045040Z",  // この形式でお願いします
-    "uuid": "strng",
-    "transactions": [
-        {
-        "recipientWallet": "5VTTMMPbgi4SjbKyeXwUvTf7S5VBYCRcqq4eHzV5BmyR",
-        "amount": 2.999999
-        },
-        {
-        "recipientWallet": "8KEXsoZYVRgmmXg9qfFnC7dMKjJdZRcfP3ATztR4KR5P",
-        "amount": 2.654321
-        },
-        {
-
-        "recipientWallet": "8KEXsoZYVRgmmXg9qfFnC7dMKjJdZRcfP3ATztR4KR5P",
-        "amount": 2.654321
-        }
-     ...
-    ]
+      "recipientWallet": "5VTTMMPbgi4SjbKyeXwUvTf7S5VBYCRcqq4eHzV5BmyR",
+      "amount": 2.999999
+    },
+    {
+      "recipientWallet": "8KEXsoZYVRgmmXg9qfFnC7dMKjJdZRcfP3ATztR4KR5P",
+      "amount": 2.654321
     }
+  ]
+}
+```
+
+#### CSV保存ファイル管理
+
+- CSVは `public/csv/[ウォレットアドレスの先頭文字]/[ウォレットアドレス]/` ディレクトリに保存
+- ファイル名: `[タイムスタンプ]_[UUID接頭辞].csv`
+- 3ヶ月以上経過したCSVファイルは自動的に削除
+
+## テスト
+
+```bash
+npm test               # テスト実行
+npm run test:watch     # ウォッチモードでテスト
+npm run test:coverage  # カバレッジ付きでテスト
 ```
