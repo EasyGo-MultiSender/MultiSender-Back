@@ -81,7 +81,8 @@ jobs:
           
           # デプロイパッケージを直接圧縮してS3にアップロード
           echo "デプロイパッケージを圧縮してS3にアップロード中..."
-          tar -czf - * | aws s3 cp - s3://${DEPLOY_BUCKET}/${DEPLOY_KEY}
+          
+          tar -czf - .* * --exclude=./. --exclude=./.. | aws s3 cp - s3://${DEPLOY_BUCKET}/${DEPLOY_KEY}
           
           # アップロード確認
           echo "アップロード確認中..."
