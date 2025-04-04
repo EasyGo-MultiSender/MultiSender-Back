@@ -1,6 +1,9 @@
-# BulkSender バックエンド
+# <p align="center">EasyGo Multisender Back</p>
+### <p align="center">The New Standard for Fast, Low-Cost Solana Airdrops</p>
+[![Test](https://github.com/pj-guzen/BulkSender-Back/actions/workflows/test.yml/badge.svg)](https://github.com/pj-guzen/BulkSender-Back/actions/workflows/test.yml)
+[![Test Deploy](https://github.com/pj-guzen/BulkSender-Back/actions/workflows/test_deploy.yml/badge.svg)](https://github.com/pj-guzen/BulkSender-Back/actions/workflows/test_deploy.yml)
 
-BulkSenderは複数の宛先に一括でトークン送信するためのバックエンドサービスです。送信トランザクションの詳細を受け取り、CSVファイルとして保存します。
+EasyGo Multisenderは複数の宛先に一括でトークン送信するためのバックエンドサービスです。送信トランザクションの詳細を受け取り、CSVファイルとして保存します。
 
 ## 機能概要
 
@@ -96,7 +99,7 @@ npm run stg   # ステージング環境で実行
   "tokenType": "tokenType",
   "tokenSymbol": "symbol",
   "tokenMintAddress": "So11111111111111111111111111111111111111111",
-  "timeStamp": "20141010T045040Z",  // ISO 8601形式で指定
+  "timeStamp": "20141010T045040Z",
   "uuid": "strng",
   "transactions": [
     {
