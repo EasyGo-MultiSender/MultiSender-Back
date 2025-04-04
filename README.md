@@ -99,7 +99,7 @@ npm run stg   # ステージング環境で実行
   "tokenType": "tokenType",
   "tokenSymbol": "symbol",
   "tokenMintAddress": "So11111111111111111111111111111111111111111",
-  "timeStamp": "20141010T045040Z",  // ISO 8601形式で指定
+  "timeStamp": "20141010T045040Z",
   "uuid": "strng",
   "transactions": [
     {
